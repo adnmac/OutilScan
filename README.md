@@ -2,6 +2,8 @@
 
 # OutilScan
 
+> 🇬🇧 macOS app (Apple Silicon) to scan with Fujitsu ScanSnap S1500 and S1300 scanners — single or double-sided, cleaned and straightened pages, searchable PDF with automatic file naming. Interface in English, French, German and Italian. Documentation below is in French.
+
 Application macOS (Apple Silicon) pour numériser avec des **Fujitsu ScanSnap S1500 et S1300**, en recto ou en recto verso, vers un PDF multipage avec OCR.
 
 ScanSnap Home ne prend pas en charge ces modèles : l'app les pilote via le pilote libre **SANE** (backend `fujitsu` pour le S1500, `epjitsu` pour le S1300). Elle lit les capacités de chaque scanner (résolutions, modes, redressement) et n'affiche que les réglages qu'il accepte. Si plusieurs scanners sont branchés, un menu permet de choisir.
@@ -48,6 +50,8 @@ Pour installer sur un autre Mac, `./make-dmg.sh` crée `build/OutilScan-<version
 3. **Numériser** (⌘N) — un nouveau passage ajoute les pages à la suite. Chaque page est redressée et nettoyée (ombres du pli, transparence du verso) dès qu'elle arrive.
 4. Réorganiser par glisser-déposer, pivoter ou supprimer (survol ou clic droit) ; double-clic pour agrandir et parcourir les pages avec ← →.
 5. **Enregistrer le PDF** (⌘S) : le nom `AAMMJJ-EMETTEUR-Intitule` (par ex. `261012-CHULILLE-Facture-Soins`) est proposé d'après le contenu du document, par Apple Intelligence sur le Mac (macOS 26+) ou par des règles simples. Les corrections sont mémorisées. Le PDF contient le texte reconnu (OCR français, néerlandais, anglais, allemand).
+
+**Préférences** (menu OutilScan > Réglages…, ⌘,) : apparence (selon le système, claire ou sombre) et langue de l'interface (français, anglais, allemand, italien), appliquées immédiatement.
 
 Si le scanner n'est pas trouvé : quitter ScanSnap Home et VueScan (un seul logiciel peut l'utiliser à la fois), puis cliquer sur Actualiser. En ligne de commande : `scanimage -L`.
 

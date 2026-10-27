@@ -1,4 +1,5 @@
 import AppKit
+import OutilScanCore
 import SwiftUI
 
 /// Dossier d'enregistrement des PDF, partagé entre la barre latérale et la fenêtre d'enregistrement.
@@ -21,8 +22,8 @@ enum SaveFolder {
         panel.canChooseFiles = false
         panel.canCreateDirectories = true
         panel.directoryURL = URL(fileURLWithPath: path, isDirectory: true)
-        panel.prompt = "Choisir"
-        panel.message = "Dossier où enregistrer les PDF numérisés"
+        panel.prompt = L10n.tr("Choisir")
+        panel.message = L10n.tr("Dossier où enregistrer les PDF numérisés")
         return panel.runModal() == .OK ? panel.url?.path : nil
     }
 }
@@ -32,7 +33,7 @@ struct SaveFolderSection: View {
     @AppStorage(SaveFolder.storageKey) private var directoryPath = SaveFolder.defaultPath
 
     var body: some View {
-        Section("Enregistrement") {
+        Section(L10n.tr("Enregistrement")) {
             VStack(alignment: .leading, spacing: 8) {
                 Label {
                     Text(SaveFolder.displayPath(directoryPath))
@@ -45,15 +46,15 @@ struct SaveFolderSection: View {
                         .foregroundStyle(folderExists ? Color.accentColor : .orange)
                 }
                 if !folderExists {
-                    Text("Ce dossier n'existe plus : choisis-en un autre.")
+                    Text(L10n.tr("Ce dossier n'existe plus : choisis-en un autre."))
                         .font(.caption)
                         .foregroundStyle(.orange)
                 }
                 HStack {
-                    Button("Choisir…") {
+                    Button(L10n.tr("Choisir…")) {
                         if let path = SaveFolder.choose(startingAt: directoryPath) { directoryPath = path }
                     }
-                    Button("Ouvrir") {
+                    Button(L10n.tr("Ouvrir")) {
                         NSWorkspace.shared.open(URL(fileURLWithPath: directoryPath, isDirectory: true))
                     }
                     .disabled(!folderExists)

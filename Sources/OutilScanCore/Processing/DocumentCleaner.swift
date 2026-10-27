@@ -16,9 +16,9 @@ public enum DocumentCleaner {
 
         public var label: String {
             switch self {
-            case .light: return "Léger"
-            case .normal: return "Normal"
-            case .strong: return "Fort"
+            case .light: return L10n.tr("Léger")
+            case .normal: return L10n.tr("Normal")
+            case .strong: return L10n.tr("Fort")
             }
         }
 

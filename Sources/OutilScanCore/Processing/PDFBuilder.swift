@@ -10,8 +10,8 @@ public enum PDFBuilderError: LocalizedError {
 
     public var errorDescription: String? {
         switch self {
-        case .unreadableImage(let url): return "Impossible de lire l'image \(url.lastPathComponent)."
-        case .cannotCreatePDF(let url): return "Impossible de créer le PDF \(url.path)."
+        case .unreadableImage(let url): return L10n.tr("Impossible de lire l'image %@.", url.lastPathComponent)
+        case .cannotCreatePDF(let url): return L10n.tr("Impossible de créer le PDF %@.", url.path)
         }
     }
 }

@@ -17,8 +17,8 @@ public enum ScanSide: String, CaseIterable, Codable, Identifiable {
 
     public var label: String {
         switch self {
-        case .simplex: return "Recto"
-        case .duplex: return "Recto verso"
+        case .simplex: return L10n.tr("Recto")
+        case .duplex: return L10n.tr("Recto verso")
         }
     }
 }
@@ -32,9 +32,9 @@ public enum ColorMode: String, CaseIterable, Codable, Identifiable {
 
     public var label: String {
         switch self {
-        case .color: return "Couleur"
-        case .gray: return "Niveaux de gris"
-        case .lineart: return "Noir et blanc"
+        case .color: return L10n.tr("Couleur")
+        case .gray: return L10n.tr("Niveaux de gris")
+        case .lineart: return L10n.tr("Noir et blanc")
         }
     }
 }

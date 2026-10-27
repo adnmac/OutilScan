@@ -8,69 +8,69 @@ struct SettingsPanel: View {
     var body: some View {
         VStack(spacing: 0) {
             Form {
-                Section("Scanner") {
+                Section(L10n.tr("Scanner")) {
                     scannerStatus
                 }
 
-                Section("Numérisation") {
-                    Picker("Face", selection: $session.settings.side) {
+                Section(L10n.tr("Numérisation")) {
+                    Picker(L10n.tr("Face"), selection: $session.settings.side) {
                         ForEach(session.capabilities.sides) { Text($0.label).tag($0) }
                     }
                     .pickerStyle(.segmented)
 
-                    Picker("Couleur", selection: $session.settings.colorMode) {
+                    Picker(L10n.tr("Couleur"), selection: $session.settings.colorMode) {
                         ForEach(session.capabilities.colorModes) { Text($0.label).tag($0) }
                     }
 
-                    Picker("Résolution", selection: $session.settings.resolution) {
+                    Picker(L10n.tr("Résolution"), selection: $session.settings.resolution) {
                         ForEach(resolutions, id: \.self) { Text("\($0) dpi").tag($0) }
                     }
 
-                    Picker("Format", selection: $session.settings.paperSize) {
+                    Picker(L10n.tr("Format"), selection: $session.settings.paperSize) {
                         ForEach(PaperSize.allCases) { Text($0.label).tag($0) }
                     }
 
                     // Redressement fait par l'app : disponible pour tous les scanners.
-                    Toggle("Redresser les pages", isOn: $session.settings.deskew)
+                    Toggle(L10n.tr("Redresser les pages"), isOn: $session.settings.deskew)
                 }
 
                 if session.settings.colorMode != .lineart {
-                    Section("Nettoyage") {
-                        Toggle("Nettoyer le fond", isOn: $session.settings.cleanBackground)
+                    Section(L10n.tr("Nettoyage")) {
+                        Toggle(L10n.tr("Nettoyer le fond"), isOn: $session.settings.cleanBackground)
                         if session.settings.cleanBackground {
-                            Picker("Intensité", selection: $session.settings.cleanStrength) {
+                            Picker(L10n.tr("Intensité"), selection: $session.settings.cleanStrength) {
                                 ForEach(DocumentCleaner.Strength.allCases) { Text($0.label).tag($0) }
                             }
                             .pickerStyle(.segmented)
-                            Text("Supprime les ombres du pli et le texte du verso vu par transparence.")
+                            Text(L10n.tr("Supprime les ombres du pli et le texte du verso vu par transparence."))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
                     }
                 }
 
-                Section("Pages blanches") {
-                    Toggle("Ignorer les pages blanches", isOn: $session.settings.skipBlankPages)
+                Section(L10n.tr("Pages blanches")) {
+                    Toggle(L10n.tr("Ignorer les pages blanches"), isOn: $session.settings.skipBlankPages)
                     if session.settings.skipBlankPages {
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
-                                Text("Sensibilité")
+                                Text(L10n.tr("Sensibilité"))
                                 Spacer()
-                                TextField("Sensibilité", value: sensitivityPercent, format: .number.precision(.fractionLength(0)))
+                                TextField(L10n.tr("Sensibilité"), value: sensitivityPercent, format: .number.precision(.fractionLength(0)))
                                     .labelsHidden()
                                     .multilineTextAlignment(.trailing)
                                     .frame(width: 48)
                                 Text("%")
                             }
                             Slider(value: sensitivityPercent, in: 0...100, step: 1) {
-                                Text("Sensibilité")
+                                Text(L10n.tr("Sensibilité"))
                             } minimumValueLabel: {
-                                Text("Faible").font(.caption)
+                                Text(L10n.tr("Faible")).font(.caption)
                             } maximumValueLabel: {
-                                Text("Forte").font(.caption)
+                                Text(L10n.tr("Forte")).font(.caption)
                             }
                             .labelsHidden()
-                            Text("Une sensibilité forte ignore aussi les pages presque vides.")
+                            Text(L10n.tr("Une sensibilité forte ignore aussi les pages presque vides."))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -104,13 +104,13 @@ struct SettingsPanel: View {
         case .searching:
             HStack {
                 ProgressView().controlSize(.small)
-                Text("Recherche du scanner…")
+                Text(L10n.tr("Recherche du scanner…"))
             }
         case .driverMissing:
             VStack(alignment: .leading, spacing: 6) {
-                Label("Pilote SANE absent", systemImage: "xmark.octagon.fill")
+                Label(L10n.tr("Pilote SANE absent"), systemImage: "xmark.octagon.fill")
                     .foregroundStyle(.red)
-                Text("Installe-le dans le Terminal :")
+                Text(L10n.tr("Installe-le dans le Terminal :"))
                     .font(.caption)
                 Text("brew install sane-backends")
                     .font(.caption.monospaced())
@@ -119,28 +119,28 @@ struct SettingsPanel: View {
             }
         case .notFound:
             VStack(alignment: .leading, spacing: 6) {
-                Label("Scanner non détecté", systemImage: "exclamationmark.triangle.fill")
+                Label(L10n.tr("Scanner non détecté"), systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
-                Text("Branche le S1500 en USB et ouvre son capot pour l'allumer.")
+                Text(L10n.tr("Branche le scanner en USB et ouvre son capot pour l'allumer."))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 refreshButton
             }
         case .firmwareMissing(let missing):
             VStack(alignment: .leading, spacing: 6) {
-                Label("Firmware manquant", systemImage: "exclamationmark.triangle.fill")
+                Label(L10n.tr("Firmware manquant"), systemImage: "exclamationmark.triangle.fill")
                     .foregroundStyle(.orange)
-                Text("Le \(missing.productName) est branché, mais SANE a besoin du fichier « \(missing.fileName) » fourni par Fujitsu avec ScanSnap Manager.")
+                Text(L10n.tr("Le %@ est branché, mais SANE a besoin du fichier « %@ » fourni par Fujitsu avec ScanSnap Manager.", missing.productName, missing.fileName))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-                Button("Importer le firmware…") { importFirmware(missing) }
+                Button(L10n.tr("Importer le firmware…")) { importFirmware(missing) }
                 refreshButton
             }
         case .ready(let device):
             HStack {
                 if session.devices.count > 1 {
-                    Picker("Scanner", selection: deviceSelection) {
+                    Picker(L10n.tr("Scanner"), selection: deviceSelection) {
                         ForEach(session.devices) { Text($0.displayName).tag($0.id) }
                     }
                     .labelsHidden()
@@ -166,8 +166,8 @@ struct SettingsPanel: View {
 
     private func importFirmware(_ missing: MissingFirmware) {
         let panel = NSOpenPanel()
-        panel.message = "Choisis le fichier \(missing.fileName) (copié depuis une installation de ScanSnap Manager)."
-        panel.prompt = "Installer"
+        panel.message = L10n.tr("Choisis le fichier %@ (copié depuis une installation de ScanSnap Manager).", missing.fileName)
+        panel.prompt = L10n.tr("Installer")
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
         if panel.runModal() == .OK, let url = panel.url {
@@ -179,7 +179,7 @@ struct SettingsPanel: View {
         Button {
             Task { await session.detectScanner() }
         } label: {
-            Label("Actualiser", systemImage: "arrow.clockwise")
+            Label(L10n.tr("Actualiser"), systemImage: "arrow.clockwise")
         }
         .disabled(session.isScanning || session.scannerState == .searching)
     }
@@ -190,7 +190,7 @@ struct SettingsPanel: View {
             Button(role: .cancel) {
                 session.cancelScan()
             } label: {
-                Label("Annuler", systemImage: "stop.fill")
+                Label(L10n.tr("Annuler"), systemImage: "stop.fill")
                     .frame(maxWidth: .infinity)
             }
             .controlSize(.large)
@@ -198,7 +198,7 @@ struct SettingsPanel: View {
             Button {
                 Task { await session.scan() }
             } label: {
-                Label(session.pages.isEmpty ? "Numériser" : "Numériser et ajouter", systemImage: "scanner")
+                Label(L10n.tr(session.pages.isEmpty ? "Numériser" : "Numériser et ajouter"), systemImage: "scanner")
                     .frame(maxWidth: .infinity)
             }
             .controlSize(.large)

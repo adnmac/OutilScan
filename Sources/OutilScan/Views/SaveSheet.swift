@@ -16,13 +16,13 @@ struct SaveSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Enregistrer le PDF").font(.title2.bold())
+            Text(L10n.tr("Enregistrer le PDF")).font(.title2.bold())
 
             Form {
                 Section {
-                    LabeledContent("Date") {
+                    LabeledContent(L10n.tr("Date")) {
                         HStack(spacing: 10) {
-                            TextField("AAMMJJ", text: $name.date)
+                            TextField(L10n.tr("AAMMJJ"), text: $name.date)
                                 .textFieldStyle(.roundedBorder)
                                 .font(.body.monospacedDigit())
                                 .frame(minWidth: 110, maxWidth: 130)
@@ -32,7 +32,7 @@ struct SaveSheet: View {
                                 Image(systemName: "calendar")
                             }
                             .buttonStyle(.borderless)
-                            .help("Choisir la date dans un calendrier")
+                            .help(L10n.tr("Choisir la date dans un calendrier"))
                             .popover(isPresented: $showingCalendar, arrowEdge: .bottom) {
                                 calendar
                             }
@@ -42,17 +42,17 @@ struct SaveSheet: View {
                         }
                     }
 
-                    LabeledContent("Émetteur") {
+                    LabeledContent(L10n.tr("Émetteur")) {
                         HStack {
-                            TextField("ex. CHU Lille", text: $name.issuer)
+                            TextField(L10n.tr("ex. CHU Lille"), text: $name.issuer)
                                 .textFieldStyle(.roundedBorder)
                             recentMenu(session.namingMemory.issuers) { name.issuer = $0 }
                         }
                     }
 
-                    LabeledContent("Intitulé") {
+                    LabeledContent(L10n.tr("Intitulé")) {
                         HStack {
-                            TextField("ex. Facture soins", text: $name.title)
+                            TextField(L10n.tr("ex. Facture soins"), text: $name.title)
                                 .textFieldStyle(.roundedBorder)
                             recentMenu(session.namingMemory.titles) { name.title = $0 }
                         }
@@ -62,18 +62,18 @@ struct SaveSheet: View {
                 }
                 .disabled(isAnalyzing)
 
-                LabeledContent("Dossier") {
+                LabeledContent(L10n.tr("Dossier")) {
                     HStack {
                         Text(SaveFolder.displayPath(directoryPath))
                             .lineLimit(1)
                             .truncationMode(.middle)
                             .foregroundStyle(.secondary)
-                        Button("Choisir…", action: chooseDirectory)
+                        Button(L10n.tr("Choisir…"), action: chooseDirectory)
                     }
                 }
 
-                Toggle("Reconnaissance de texte (OCR)", isOn: $session.settings.ocr)
-                Toggle("Afficher dans le Finder après l'enregistrement", isOn: $revealAfterSave)
+                Toggle(L10n.tr("Reconnaissance de texte (OCR)"), isOn: $session.settings.ocr)
+                Toggle(L10n.tr("Afficher dans le Finder après l'enregistrement"), isOn: $revealAfterSave)
             }
 
             HStack(spacing: 6) {
@@ -82,7 +82,7 @@ struct SaveSheet: View {
                     .font(.body.monospaced())
                     .textSelection(.enabled)
                 Spacer()
-                Text("\(session.pages.count) page\(session.pages.count > 1 ? "s" : "")")
+                Text(L10n.pages(session.pages.count))
                     .foregroundStyle(.secondary)
             }
             .padding(10)
@@ -90,9 +90,9 @@ struct SaveSheet: View {
 
             HStack {
                 Spacer()
-                Button("Annuler", role: .cancel) { dismiss() }
+                Button(L10n.tr("Annuler"), role: .cancel) { dismiss() }
                     .keyboardShortcut(.cancelAction)
-                Button("Enregistrer") { save() }
+                Button(L10n.tr("Enregistrer")) { save() }
                     .keyboardShortcut(.defaultAction)
                     .buttonStyle(.borderedProminent)
                     .disabled(isAnalyzing || name.fileName.isEmpty)
@@ -113,12 +113,12 @@ struct SaveSheet: View {
         if isAnalyzing {
             HStack(spacing: 6) {
                 ProgressView().controlSize(.small)
-                Text("Lecture du document…")
+                Text(L10n.tr("Lecture du document…"))
             }
         } else if suggestion?.source == .appleIntelligence {
-            Label("Nom proposé par Apple Intelligence (sur ton Mac)", systemImage: "sparkles")
+            Label(L10n.tr("Nom proposé par Apple Intelligence (sur ton Mac)"), systemImage: "sparkles")
         } else {
-            Label("Nom proposé d'après les mots-clés du document", systemImage: "text.magnifyingglass")
+            Label(L10n.tr("Nom proposé d'après les mots-clés du document"), systemImage: "text.magnifyingglass")
         }
     }
 
@@ -132,11 +132,11 @@ struct SaveSheet: View {
             }
         )
         return VStack(spacing: 8) {
-            DatePicker("Date du document", selection: selection, displayedComponents: .date)
+            DatePicker(L10n.tr("Date du document"), selection: selection, displayedComponents: .date)
                 .datePickerStyle(.graphical)
                 .labelsHidden()
-                .environment(\.locale, Locale(identifier: "fr_BE"))
-            Button("Aujourd'hui") { selection.wrappedValue = Date() }
+                .environment(\.locale, L10n.locale)
+            Button(L10n.tr("Aujourd'hui")) { selection.wrappedValue = Date() }
                 .buttonStyle(.link)
         }
         .padding(12)
@@ -145,15 +145,15 @@ struct SaveSheet: View {
     @ViewBuilder
     private var dateHint: some View {
         if let date = DocumentName.date(fromCode: name.date) {
-            let label = date.formatted(.dateTime.day().month(.wide).year().locale(Locale(identifier: "fr_FR")))
+            let label = date.formatted(.dateTime.day().month(.wide).year().locale(L10n.locale))
             if suggestion?.dateFound == false && name.date == suggestion?.name.date {
-                Text("\(label) — date du jour, aucune date trouvée")
+                Text(L10n.tr("%@ — date du jour, aucune date trouvée", label))
                     .font(.caption).foregroundStyle(.orange)
             } else {
                 Text(label).font(.caption).foregroundStyle(.secondary)
             }
         } else if !name.date.isEmpty {
-            Text("Format attendu : AAMMJJ, par ex. 261012").font(.caption).foregroundStyle(.red)
+            Text(L10n.tr("Format attendu : AAMMJJ, par ex. 261012")).font(.caption).foregroundStyle(.red)
         }
     }
 
@@ -169,7 +169,7 @@ struct SaveSheet: View {
         .menuStyle(.borderlessButton)
         .fixedSize()
         .disabled(values.isEmpty)
-        .help("Déjà utilisés")
+        .help(L10n.tr("Déjà utilisés"))
     }
 
     private var directoryURL: URL { URL(fileURLWithPath: directoryPath, isDirectory: true) }

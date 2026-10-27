@@ -51,6 +51,8 @@ public final class ScanSession: ObservableObject {
             scannerState = .driverMissing
             return
         }
+        // Une détection pendant un scan interrogerait le scanner occupé (par ex. après un changement de langue).
+        guard !isScanning else { return }
         scannerState = .searching
         do {
             devices = try await scanner.listDevices()
@@ -86,11 +88,11 @@ public final class ScanSession: ObservableObject {
     public func installFirmware(from url: URL, for missing: MissingFirmware) async {
         do {
             try FirmwareHelper.install(url, for: missing)
-            statusMessage = "Firmware installé pour le \(missing.productName)."
+            statusMessage = L10n.tr("Firmware installé pour le %@.", missing.productName)
             errorMessage = nil
             await detectScanner()
         } catch {
-            errorMessage = "Impossible d'installer le firmware : \(error.localizedDescription)"
+            errorMessage = L10n.tr("Impossible d'installer le firmware : %@", error.localizedDescription)
         }
     }
 
@@ -103,7 +105,7 @@ public final class ScanSession: ObservableObject {
         scannedInCurrentBatch = 0
         skippedInCurrentBatch = 0
         errorMessage = nil
-        statusMessage = "Numérisation…"
+        statusMessage = L10n.tr("Numérisation…")
         let batchDirectory = workDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         let current = settings
 
@@ -130,7 +132,7 @@ public final class ScanSession: ObservableObject {
                         } else {
                             self.pages.append(ScanPage(imageURL: url, resolution: current.resolution))
                         }
-                        self.statusMessage = "Page \(self.scannedInCurrentBatch) numérisée…"
+                        self.statusMessage = L10n.tr("Page %d numérisée…", self.scannedInCurrentBatch)
                     }
                 }
             }
@@ -138,7 +140,7 @@ public final class ScanSession: ObservableObject {
             await Task.yield()
             statusMessage = summary(skipped: skippedInCurrentBatch)
         } catch let error as ScannerError where error == .cancelled {
-            statusMessage = "Numérisation annulée."
+            statusMessage = L10n.tr("Numérisation annulée.")
         } catch {
             statusMessage = nil
             errorMessage = error.localizedDescription
@@ -153,12 +155,13 @@ public final class ScanSession: ObservableObject {
 
     private func summary(skipped: Int) -> String {
         let kept = scannedInCurrentBatch - skipped
-        var text = "\(kept) page\(kept > 1 ? "s" : "") ajoutée\(kept > 1 ? "s" : "")"
+        var text = L10n.plural(kept, one: "1 page ajoutée", other: "%d pages ajoutées")
         if skipped > 0 {
-            text += ", \(skipped) page\(skipped > 1 ? "s" : "") blanche\(skipped > 1 ? "s" : "") ignorée\(skipped > 1 ? "s" : "")"
+            text += ", " + L10n.plural(skipped, one: "1 page blanche ignorée", other: "%d pages blanches ignorées")
         }
         return text + "."
     }
+
 
     public func cancelScan() {
         scanner?.cancel()
@@ -222,7 +225,7 @@ public final class ScanSession: ObservableObject {
         isSaving = true
         saveProgress = 0
         errorMessage = nil
-        statusMessage = ocr ? "Reconnaissance du texte et création du PDF…" : "Création du PDF…"
+        statusMessage = L10n.tr(ocr ? "Reconnaissance du texte et création du PDF…" : "Création du PDF…")
         let snapshot = pages
 
         let result: Result<Void, Error> = await Task.detached(priority: .userInitiated) {
@@ -236,7 +239,7 @@ public final class ScanSession: ObservableObject {
         isSaving = false
         switch result {
         case .success:
-            statusMessage = "Enregistré : \(url.lastPathComponent)"
+            statusMessage = L10n.tr("Enregistré : %@", url.lastPathComponent)
             return true
         case .failure(let error):
             statusMessage = nil

@@ -6,8 +6,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 APP="build/OutilScan.app"
-VERSION="1.1"
-BUILD="2"
+VERSION="1.2"
+BUILD="3"
 
 swift build -c release --product OutilScan
 BIN="$(swift build -c release --product OutilScan --show-bin-path)/OutilScan"
@@ -17,6 +17,8 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/OutilScan"
 # Icône (régénérable avec : swift Resources/make-icon.swift)
 cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
+# Langues déclarées : les menus standard de macOS (Édition, Fenêtre…) suivent la langue choisie dans l'app.
+for lang in fr en de it; do mkdir -p "$APP/Contents/Resources/$lang.lproj"; done
 
 cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -32,6 +34,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>CFBundleShortVersionString</key><string>${VERSION}</string>
     <key>CFBundleVersion</key><string>${BUILD}</string>
     <key>CFBundleDevelopmentRegion</key><string>fr</string>
+    <key>CFBundleLocalizations</key><array><string>fr</string><string>en</string><string>de</string><string>it</string></array>
     <key>LSMinimumSystemVersion</key><string>14.0</string>
     <key>LSApplicationCategoryType</key><string>public.app-category.productivity</string>
     <key>NSHighResolutionCapable</key><true/>

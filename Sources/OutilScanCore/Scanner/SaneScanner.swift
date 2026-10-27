@@ -21,17 +21,17 @@ public enum ScannerError: LocalizedError, Equatable {
     public var errorDescription: String? {
         switch self {
         case .scanimageMissing:
-            return "Le pilote SANE est introuvable. Installe-le avec : brew install sane-backends"
+            return L10n.tr("Le pilote SANE est introuvable. Installe-le avec : brew install sane-backends")
         case .noDocuments:
-            return "Le chargeur est vide. Place les documents face imprimée vers le bas et réessaie."
+            return L10n.tr("Le chargeur est vide. Place les documents face imprimée vers le bas et réessaie.")
         case .coverOpen:
-            return "Le capot du scanner est ouvert ou le scanner est en veille."
+            return L10n.tr("Le capot du scanner est ouvert ou le scanner est en veille.")
         case .jammed:
-            return "Bourrage papier : retire les feuilles coincées puis relance."
+            return L10n.tr("Bourrage papier : retire les feuilles coincées puis relance.")
         case .busy:
-            return "Le scanner est occupé. Quitte ScanSnap Home ou VueScan, puis réessaie."
+            return L10n.tr("Le scanner est occupé. Quitte ScanSnap Home ou VueScan, puis réessaie.")
         case .cancelled:
-            return "Numérisation annulée."
+            return L10n.tr("Numérisation annulée.")
         case .other(let message):
             return message
         }
@@ -44,8 +44,8 @@ public enum ScannerError: LocalizedError, Equatable {
         if text.contains("cover") { return .coverOpen }
         if text.contains("jammed") { return .jammed }
         if text.contains("busy") { return .busy }
-        let lastLine = stderr.split(separator: "\n").last.map(String.init) ?? "Erreur inconnue"
-        return .other("Erreur du scanner : \(lastLine)")
+        let lastLine = stderr.split(separator: "\n").last.map(String.init) ?? L10n.tr("Erreur inconnue")
+        return .other(L10n.tr("Erreur du scanner : %@", lastLine))
     }
 }
 

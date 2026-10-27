@@ -262,6 +262,31 @@ final class OutilScanTests {
         check(settings.cleanBackground && settings.cleanStrength == .normal)
     }
 
+    /// Chaque traduction existe, n'est pas vide et garde les mêmes valeurs insérées (%d, %@) que le français.
+    func testTranslations() {
+        func specifiers(_ text: String) -> [String] {
+            let regex = try! NSRegularExpression(pattern: "%[d@]")
+            return regex.matches(in: text, range: NSRange(text.startIndex..., in: text)).map { (text as NSString).substring(with: $0.range) }
+        }
+        for (french, entry) in L10n.table {
+            for (code, text) in [("en", entry.en), ("de", entry.de), ("it", entry.it)] {
+                check(!text.isEmpty, "\(code) vide pour « \(french) »")
+                check(specifiers(text) == specifiers(french), "\(code) : valeurs différentes pour « \(french) »")
+            }
+        }
+        let saved = L10n.language
+        defer { L10n.language = saved }
+        L10n.language = .de
+        check(L10n.tr("Page %d sur %d", 2, 5) == "Seite 2 von 5")
+        check(L10n.pages(1) == "1 Seite" && L10n.pages(3) == "3 Seiten")
+        check(ScanSide.duplex.label == "Beidseitig")
+        L10n.language = .it
+        check(ScannerError.noDocuments.errorDescription?.hasPrefix("L'alimentatore") == true)
+        L10n.language = .fr
+        check(L10n.tr("Texte absent de la table") == "Texte absent de la table")
+        check(L10n.tr("Enregistré : %@", "a.pdf") == "Enregistré : a.pdf")
+    }
+
     func testScanimageArguments() {
         var settings = ScanSettings()
         settings.side = .duplex
@@ -395,6 +420,7 @@ let tests: [(String, (OutilScanTests) async throws -> Void)] = [
     ("Sens de rotation", { try $0.testRotationDirection() }),
     ("Nettoyage du fond", { try $0.testDocumentCleaner() }),
     ("Anciens réglages conservés", { try $0.testOldSettingsStillDecode() }),
+    ("Traductions EN / DE / IT", { $0.testTranslations() }),
     ("Arguments scanimage", { $0.testScanimageArguments() }),
     ("Analyse sortie scanimage", { $0.testParseDeviceListAndOptions() }),
     ("Capacités du S1300", { $0.testS1300Capabilities() }),

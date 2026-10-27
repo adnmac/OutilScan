@@ -24,14 +24,14 @@ struct ContentView: View {
                     Button(role: .destructive) {
                         confirmingClear = true
                     } label: {
-                        Label("Tout effacer", systemImage: "trash")
+                        Label(L10n.tr("Tout effacer"), systemImage: "trash")
                     }
                     .disabled(session.pages.isEmpty || session.isScanning || session.isSaving)
 
                     Button {
                         showingSaveSheet = true
                     } label: {
-                        Label("Enregistrer le PDF", systemImage: "square.and.arrow.down")
+                        Label(L10n.tr("Enregistrer le PDF"), systemImage: "square.and.arrow.down")
                     }
                     .keyboardShortcut("s")
                     .disabled(session.pages.isEmpty || session.isScanning || session.isSaving)
@@ -41,17 +41,17 @@ struct ContentView: View {
         .sheet(isPresented: $showingSaveSheet) {
             SaveSheet()
         }
-        .confirmationDialog("Effacer toutes les pages numérisées ?", isPresented: $confirmingClear) {
-            Button("Effacer", role: .destructive) { session.clear() }
+        .confirmationDialog(L10n.tr("Effacer toutes les pages numérisées ?"), isPresented: $confirmingClear) {
+            Button(L10n.tr("Effacer"), role: .destructive) { session.clear() }
         }
         .task { await session.detectScanner() }
     }
 
     private var emptyState: some View {
         ContentUnavailableView {
-            Label("Aucune page", systemImage: "doc.viewfinder")
+            Label(L10n.tr("Aucune page"), systemImage: "doc.viewfinder")
         } description: {
-            Text("Place tes documents dans le chargeur, face imprimée vers le bas, puis clique sur « Numériser ».")
+            Text(L10n.tr("Place tes documents dans le chargeur, face imprimée vers le bas, puis clique sur « Numériser »."))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -71,7 +71,7 @@ struct ContentView: View {
                 Text(status).foregroundStyle(.secondary)
             }
             Spacer()
-            Text("\(session.pages.count) page\(session.pages.count > 1 ? "s" : "")")
+            Text(L10n.pages(session.pages.count))
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
         }

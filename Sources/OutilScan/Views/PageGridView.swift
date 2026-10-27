@@ -60,24 +60,24 @@ private struct PageCell: View {
                 }
                 .animation(.easeInOut(duration: 0.2), value: page.rotation)
 
-            Text("Page \(number)")
+            Text(L10n.tr("Page %d", number))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
         .onHover { hovering = $0 }
         .contextMenu {
-            Button("Pivoter à droite") { session.rotate(page) }
-            Button("Pivoter à gauche") { session.rotate(page, clockwise: false) }
+            Button(L10n.tr("Pivoter à droite")) { session.rotate(page) }
+            Button(L10n.tr("Pivoter à gauche")) { session.rotate(page, clockwise: false) }
             Divider()
-            Button("Supprimer la page", role: .destructive) { session.delete(page) }
+            Button(L10n.tr("Supprimer la page"), role: .destructive) { session.delete(page) }
         }
     }
 
     private var actions: some View {
         HStack(spacing: 4) {
-            iconButton("rotate.left", help: "Pivoter à gauche") { session.rotate(page, clockwise: false) }
-            iconButton("rotate.right", help: "Pivoter à droite") { session.rotate(page) }
-            iconButton("trash", help: "Supprimer la page") { session.delete(page) }
+            iconButton("rotate.left", help: L10n.tr("Pivoter à gauche")) { session.rotate(page, clockwise: false) }
+            iconButton("rotate.right", help: L10n.tr("Pivoter à droite")) { session.rotate(page) }
+            iconButton("trash", help: L10n.tr("Supprimer la page")) { session.delete(page) }
         }
         .padding(4)
         .background(.regularMaterial, in: Capsule())
@@ -120,17 +120,17 @@ private struct PagePreview: View {
 
             HStack(spacing: 12) {
                 Button { go(by: -1) } label: {
-                    Label("Précédente", systemImage: "chevron.left")
+                    Label(L10n.tr("Précédente"), systemImage: "chevron.left")
                 }
                 .keyboardShortcut(.leftArrow, modifiers: [])
                 .disabled((index ?? 0) == 0)
 
-                Text(index.map { "Page \($0 + 1) sur \(session.pages.count)" } ?? "")
+                Text(index.map { L10n.tr("Page %d sur %d", $0 + 1, session.pages.count) } ?? "")
                     .monospacedDigit()
                     .frame(minWidth: 110)
 
                 Button { go(by: 1) } label: {
-                    Label("Suivante", systemImage: "chevron.right")
+                    Label(L10n.tr("Suivante"), systemImage: "chevron.right")
                         .labelStyle(TrailingIconLabelStyle())
                 }
                 .keyboardShortcut(.rightArrow, modifiers: [])
@@ -141,18 +141,18 @@ private struct PagePreview: View {
                 Button { if let page { session.rotate(page, clockwise: false) } } label: {
                     Image(systemName: "rotate.left")
                 }
-                .help("Pivoter à gauche")
+                .help(L10n.tr("Pivoter à gauche"))
                 Button { if let page { session.rotate(page) } } label: {
                     Image(systemName: "rotate.right")
                 }
-                .help("Pivoter à droite")
+                .help(L10n.tr("Pivoter à droite"))
                 Button(role: .destructive) { deleteCurrent() } label: {
                     Image(systemName: "trash")
                 }
-                .help("Supprimer la page")
+                .help(L10n.tr("Supprimer la page"))
 
                 Spacer()
-                Button("Fermer") { dismiss() }
+                Button(L10n.tr("Fermer")) { dismiss() }
                     .keyboardShortcut(.cancelAction)
             }
         }
