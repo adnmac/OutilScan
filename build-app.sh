@@ -6,7 +6,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 APP="build/OutilScan.app"
-VERSION="1.0"
+VERSION="1.1"
+BUILD="2"
 
 swift build -c release --product OutilScan
 BIN="$(swift build -c release --product OutilScan --show-bin-path)/OutilScan"
@@ -29,7 +30,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>CFBundlePackageType</key><string>APPL</string>
     <key>CFBundleIconFile</key><string>AppIcon</string>
     <key>CFBundleShortVersionString</key><string>${VERSION}</string>
-    <key>CFBundleVersion</key><string>1</string>
+    <key>CFBundleVersion</key><string>${BUILD}</string>
     <key>CFBundleDevelopmentRegion</key><string>fr</string>
     <key>LSMinimumSystemVersion</key><string>14.0</string>
     <key>LSApplicationCategoryType</key><string>public.app-category.productivity</string>
