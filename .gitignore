@@ -1,0 +1,8 @@
+.build/
+build/
+*.app
+.DS_Store
+# Fichiers Fujitsu (firmware, installateurs) : propriété de Fujitsu/PFU, non redistribuables.
+Pilotes/
+*.nal
+*.exe
