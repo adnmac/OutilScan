@@ -26,6 +26,10 @@ Quand OutilScan détecte un S1300 sans firmware, le bouton **Importer le firmwar
 
 ## Installation
 
+**Sans compiler** : téléchargez `OutilScan-1.0.dmg` depuis la page [Releases](https://github.com/adnmac/OutilScan/releases/latest), glissez l'app dans Applications, puis installez le pilote SANE (`brew install sane-backends`).
+
+**Depuis le code source** :
+
 ```bash
 brew install sane-backends
 ./build-app.sh --install
