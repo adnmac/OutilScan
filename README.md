@@ -1,3 +1,5 @@
+<img src="Resources/AppIcon.png" width="128" alt="Icône d'OutilScan">
+
 # OutilScan
 
 Application macOS (Apple Silicon) pour numériser avec des **Fujitsu ScanSnap S1500 et S1300**, en recto ou en recto verso, vers un PDF multipage avec OCR.
@@ -56,6 +58,7 @@ Si le scanner n'est pas trouvé : quitter ScanSnap Home et VueScan (un seul logi
 - `swift run OutilScanSelfTest` — tests (XCTest et Swift Testing exigent Xcode, d'où cet exécutable)
 - `swift run OutilScanSelfTest --analyze fichier.pdf` — rejoue la proposition de nom sur un PDF
 - `./make-dmg.sh` — crée l'image disque d'installation
+- `swift Resources/make-icon.swift` — redessine l'icône (`Resources/AppIcon.icns`)
 
 Avec le SDK macOS 27, `@State` est une macro dont le plugin n'est livré qu'avec Xcode : les vues utilisent l'alias `@ViewState` (voir `Sources/OutilScan/ViewState.swift`).
 
