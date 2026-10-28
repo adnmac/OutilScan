@@ -2,7 +2,7 @@
 
 # OutilScan
 
-> 🇬🇧 macOS app (Apple Silicon) to scan with Fujitsu ScanSnap S1500 and S1300 scanners — single or double-sided, cleaned and straightened pages, searchable PDF with automatic file naming. Interface in English, French, German and Italian. Documentation below is in French.
+🇫🇷 Français · 🇬🇧 [English version](README.en.md)
 
 Application macOS (Apple Silicon) pour numériser avec des **Fujitsu ScanSnap S1500 et S1300**, en recto ou en recto verso, vers un PDF multipage avec OCR.
 
